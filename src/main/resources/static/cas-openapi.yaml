@@ -1,0 +1,6941 @@
+openapi: 3.1.0
+info:
+  title: E-commerce Conversational Agent
+  description: Autonomous E-commerce Conversational Agent with Complete ECOM APIs
+  version: 2.0.0
+paths:
+  /api/auth/register:
+    post:
+      tags:
+        - authentication
+      summary: Register
+      description: Register new user
+      operationId: register_api_auth_register_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/auth/token:
+    post:
+      tags:
+        - authentication
+      summary: Login For Access Token
+      description: Login and get access token
+      operationId: login_for_access_token_api_auth_token_post
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_login_for_access_token_api_auth_token_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/auth/login:
+    post:
+      tags:
+        - authentication
+      summary: Login
+      description: Alternative login endpoint with JSON
+      operationId: login_api_auth_login_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/auth/me:
+    get:
+      tags:
+        - authentication
+      summary: Get Current User Info
+      description: Get current user information
+      operationId: get_current_user_info_api_auth_me_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserFullResponse'
+      security:
+        - HTTPBearer: []
+  /api/auth/logout:
+    post:
+      tags:
+        - authentication
+      summary: Logout
+      description: Logout (client should discard token)
+      operationId: logout_api_auth_logout_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /api/auth/refresh:
+    post:
+      tags:
+        - authentication
+      summary: Refresh Token
+      description: Refresh access token
+      operationId: refresh_token_api_auth_refresh_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+      security:
+        - HTTPBearer: []
+  /api/users/me:
+    get:
+      tags:
+        - users
+      summary: Get Current User Profile
+      description: Get current user's profile
+      operationId: get_current_user_profile_api_users_me_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+      security:
+        - HTTPBearer: []
+    put:
+      tags:
+        - users
+      summary: Update Current User Profile
+      description: Update current user's profile
+      operationId: update_current_user_profile_api_users_me_put
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - HTTPBearer: []
+  /api/users/me/profile-update:
+    put:
+      tags:
+        - users
+      summary: Update Profile Conversational
+      description: Update user profile through conversational interface
+      operationId: update_profile_conversational_api_users_me_profile_update_put
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              type: object
+              title: Profile Update
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - HTTPBearer: []
+  /api/users/:
+    get:
+      tags:
+        - users
+      summary: List Users
+      description: List all users (admin only)
+      operationId: list_users_api_users__get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: skip
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+            title: Skip
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            maximum: 1000
+            default: 100
+            title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserResponse'
+                title: Response List Users Api Users  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+        - users
+      summary: Create User
+      description: Create new user (admin only)
+      operationId: create_user_api_users__post
+      security:
+        - HTTPBearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/users/{user_id}:
+    get:
+      tags:
+        - users
+      summary: Get User
+      description: Get user by ID (admin only)
+      operationId: get_user_api_users__user_id__get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: User UUID
+            title: User Id
+          description: User UUID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+        - users
+      summary: Delete User
+      description: Delete user (admin only)
+      operationId: delete_user_api_users__user_id__delete
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: User UUID
+            title: User Id
+          description: User UUID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/users/{user_id}/activate:
+    put:
+      tags:
+        - users
+      summary: Activate User
+      description: Activate/deactivate user (admin only)
+      operationId: activate_user_api_users__user_id__activate_put
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: User UUID
+            title: User Id
+          description: User UUID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/users/{user_id}/roles:
+    put:
+      tags:
+        - users
+      summary: Update User Roles
+      description: Update user roles (admin only)
+      operationId: update_user_roles_api_users__user_id__roles_put
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: User UUID
+            title: User Id
+          description: User UUID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: integer
+              title: Role Ids
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/products/:
+    get:
+      tags:
+        - products
+      summary: List Products
+      description: List all products with pagination and filters
+      operationId: list_products_api_products__get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            description: Page number
+            default: 1
+            title: Page
+          description: Page number
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            maximum: 100
+            minimum: 1
+            description: Items per page
+            default: 20
+            title: Limit
+          description: Items per page
+        - name: category
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            description: Filter by category
+            title: Category
+          description: Filter by category
+        - name: price_min
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: number
+              - type: 'null'
+            description: Minimum price
+            title: Price Min
+          description: Minimum price
+        - name: price_max
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: number
+              - type: 'null'
+            description: Maximum price
+            title: Price Max
+          description: Maximum price
+        - name: sort_by
+          in: query
+          required: false
+          schema:
+            type: string
+            description: Sort field
+            default: created_at
+            title: Sort By
+          description: Sort field
+        - name: sort_order
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: ^(asc|desc)$
+            description: Sort order
+            default: desc
+            title: Sort Order
+          description: Sort order
+        - name: language
+          in: query
+          required: false
+          schema:
+            type: string
+            description: Language (en/fr)
+            default: en
+            title: Language
+          description: Language (en/fr)
+        - name: in_stock_only
+          in: query
+          required: false
+          schema:
+            type: boolean
+            description: Show only in-stock products
+            default: false
+            title: In Stock Only
+          description: Show only in-stock products
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductSearchResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/products/categories:
+    get:
+      tags:
+        - products
+      summary: Get Product Categories
+      description: Get all product categories
+      operationId: get_product_categories_api_products_categories_get
+      parameters:
+        - name: language
+          in: query
+          required: false
+          schema:
+            type: string
+            description: Language (en/fr)
+            default: en
+            title: Language
+          description: Language (en/fr)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/products/featured:
+    get:
+      tags:
+        - products
+      summary: Get Featured Products
+      description: Get featured products (newest, most viewed, etc.)
+      operationId: get_featured_products_api_products_featured_get
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            maximum: 20
+            minimum: 1
+            default: 8
+            title: Limit
+        - name: language
+          in: query
+          required: false
+          schema:
+            type: string
+            description: Language (en/fr)
+            default: en
+            title: Language
+          description: Language (en/fr)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/products/search:
+    get:
+      tags:
+        - products
+      summary: Search Products
+      description: Search products with various filters
+      operationId: search_products_api_products_search_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+            description: Search query
+            title: Q
+          description: Search query
+        - name: category
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            description: Product category
+            title: Category
+          description: Product category
+        - name: price_min
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: number
+              - type: 'null'
+            description: Minimum price
+            title: Price Min
+          description: Minimum price
+        - name: price_max
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: number
+              - type: 'null'
+            description: Maximum price
+            title: Price Max
+          description: Maximum price
+        - name: language
+          in: query
+          required: false
+          schema:
+            type: string
+            description: Language (en/fr)
+            default: en
+            title: Language
+          description: Language (en/fr)
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            maximum: 50
+            description: Number of results
+            default: 10
+            title: Limit
+          description: Number of results
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductSearchResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/products/{product_id}:
+    get:
+      tags:
+        - products
+      summary: Get Product
+      description: Get product by ID
+      operationId: get_product_api_products__product_id__get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Product UUID
+            title: Product Id
+          description: Product UUID
+        - name: language
+          in: query
+          required: false
+          schema:
+            type: string
+            description: Language (en/fr)
+            default: en
+            title: Language
+          description: Language (en/fr)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/products/recommendations/for-user:
+    get:
+      tags:
+        - products
+      summary: Get User Recommendations
+      description: Get personalized product recommendations
+      operationId: get_user_recommendations_api_products_recommendations_for_user_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            maximum: 20
+            description: Number of recommendations
+            default: 5
+            title: Limit
+          description: Number of recommendations
+        - name: language
+          in: query
+          required: false
+          schema:
+            type: string
+            description: Language (en/fr)
+            default: en
+            title: Language
+          description: Language (en/fr)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductResponse'
+                title: Response Get User Recommendations Api Products Recommendations For User Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/products/{product_id}/generate-embedding:
+    post:
+      tags:
+        - products
+      summary: Generate Product Embedding
+      description: Generate embedding for a product (admin only)
+      operationId: generate_product_embedding_api_products__product_id__generate_embedding_post
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Product UUID
+            title: Product Id
+          description: Product UUID
+        - name: language
+          in: query
+          required: false
+          schema:
+            type: string
+            description: Language (en/fr)
+            default: en
+            title: Language
+          description: Language (en/fr)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/conversation/create:
+    post:
+      tags:
+        - conversation
+      summary: Create Conversation
+      description: Create a new conversation
+      operationId: create_conversation_api_conversation_create_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConversationCreate'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConversationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - HTTPBearer: []
+  /api/conversation/list:
+    get:
+      tags:
+        - conversation
+      summary: List Conversations
+      description: Get user's conversations
+      operationId: list_conversations_api_conversation_list_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+            title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConversationResponse'
+                title: Response List Conversations Api Conversation List Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/conversation/{conversation_id}:
+    delete:
+      tags:
+        - conversation
+      summary: Hard Delete Conversation
+      description: |-
+        Permanently delete a conversation and all related data
+
+        WARNING: This action cannot be undone!
+        Only available to admin users or conversation owners.
+      operationId: hard_delete_conversation_api_conversation__conversation_id__delete
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: conversation_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Conversation UUID to permanently delete
+            title: Conversation Id
+          description: Conversation UUID to permanently delete
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/conversation/{conversation_id}/messages:
+    get:
+      tags:
+        - conversation
+      summary: Get Conversation Messages
+      description: Get messages for a conversation with full context data
+      operationId: get_conversation_messages_api_conversation__conversation_id__messages_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: conversation_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Conversation UUID
+            title: Conversation Id
+          description: Conversation UUID
+        - name: include_context
+          in: query
+          required: false
+          schema:
+            type: boolean
+            description: Include full context data
+            default: true
+            title: Include Context
+          description: Include full context data
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EnhancedMessageResponse'
+                title: Response Get Conversation Messages Api Conversation  Conversation Id  Messages Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/conversation/{conversation_id}/messages/search:
+    get:
+      tags:
+        - conversation
+      summary: Search Conversation Messages
+      description: Search messages within a conversation
+      operationId: search_conversation_messages_api_conversation__conversation_id__messages_search_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: conversation_id
+          in: path
+          required: true
+          schema:
+            anyOf:
+              - type: string
+                format: uuid
+              - type: 'null'
+            title: Conversation Id
+        - name: query
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Query
+        - name: intent
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Intent
+        - name: response_type
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Response Type
+        - name: has_error
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: boolean
+              - type: 'null'
+            title: Has Error
+        - name: date_from
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+                format: date-time
+              - type: 'null'
+            title: Date From
+        - name: date_to
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+                format: date-time
+              - type: 'null'
+            title: Date To
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 50
+            title: Limit
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 0
+            title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageSearchResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/conversation/{conversation_id}/analytics:
+    get:
+      tags:
+        - conversation
+      summary: Get Conversation Analytics
+      description: Get analytics for a conversation
+      operationId: get_conversation_analytics_api_conversation__conversation_id__analytics_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: conversation_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Conversation UUID
+            title: Conversation Id
+          description: Conversation UUID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConversationAnalytics'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/conversation/{conversation_id}/message:
+    post:
+      tags:
+        - conversation
+      summary: Send Message
+      description: Send a message and get AI response with full context
+      operationId: send_message_api_conversation__conversation_id__message_post
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: conversation_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Conversation UUID
+            title: Conversation Id
+          description: Conversation UUID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageCreate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnhancedChatResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/conversation/{conversation_id}/message/{message_id}:
+    get:
+      tags:
+        - conversation
+      summary: Get Message With Context
+      description: Get a specific message with full context data
+      operationId: get_message_with_context_api_conversation__conversation_id__message__message_id__get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: conversation_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Conversation UUID
+            title: Conversation Id
+          description: Conversation UUID
+        - name: message_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Message UUID
+            title: Message Id
+          description: Message UUID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnhancedMessageResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/conversation/{conversation_id}/messages/simple:
+    get:
+      tags:
+        - conversation
+      summary: Get Conversation Messages Simple
+      description: Get messages in simple format for backward compatibility
+      operationId: get_conversation_messages_simple_api_conversation__conversation_id__messages_simple_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: conversation_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Conversation UUID
+            title: Conversation Id
+          description: Conversation UUID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/conversation/{conversation_id}/message/simple:
+    post:
+      tags:
+        - conversation
+      summary: Send Message Simple
+      description: Send message with simple response format for backward compatibility
+      operationId: send_message_simple_api_conversation__conversation_id__message_simple_post
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: conversation_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Conversation UUID
+            title: Conversation Id
+          description: Conversation UUID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageCreate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/orders/checkout:
+    post:
+      tags:
+        - orders
+      summary: Checkout
+      description: Checkout user's cart and create order
+      operationId: checkout_api_orders_checkout_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckoutRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - HTTPBearer: []
+  /api/orders/quick-checkout:
+    post:
+      tags:
+        - orders
+      summary: Quick Checkout
+      description: Quick checkout with product and quantity
+      operationId: quick_checkout_api_orders_quick_checkout_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuickOrderRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - HTTPBearer: []
+  /api/orders/history:
+    get:
+      tags:
+        - orders
+      summary: Get Order History
+      description: Get user's order history with filters
+      operationId: get_order_history_api_orders_history_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            maximum: 100
+            default: 10
+            title: Limit
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+            title: Offset
+        - name: status
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Status
+        - name: date_from
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+                format: date-time
+              - type: 'null'
+            title: Date From
+        - name: date_to
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+                format: date-time
+              - type: 'null'
+            title: Date To
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderResponse'
+                title: Response Get Order History Api Orders History Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/orders/analytics/spending:
+    get:
+      tags:
+        - orders
+      summary: Get Spending Analytics
+      description: Get user's spending analytics
+      operationId: get_spending_analytics_api_orders_analytics_spending_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: period
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: ^(week|month|quarter|year)$
+            default: month
+            title: Period
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/orders/stats:
+    get:
+      tags:
+        - orders
+      summary: Get Order Stats
+      description: Get user's order statistics
+      operationId: get_order_stats_api_orders_stats_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+        - HTTPBearer: []
+  /api/orders/admin/all:
+    get:
+      tags:
+        - orders
+      summary: Admin Get All Orders
+      description: Get all orders (admin only)
+      operationId: admin_get_all_orders_api_orders_admin_all_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            maximum: 1000
+            default: 100
+            title: Limit
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+            title: Offset
+        - name: status
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Status
+        - name: user_id
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+                format: uuid
+              - type: 'null'
+            title: User Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/orders/:
+    get:
+      tags:
+        - orders
+      summary: Get User Orders
+      description: Get user's order history
+      operationId: get_user_orders_api_orders__get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 10
+            title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderResponse'
+                title: Response Get User Orders Api Orders  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/orders/{order_id}:
+    get:
+      tags:
+        - orders
+      summary: Get Order
+      description: Get specific order
+      operationId: get_order_api_orders__order_id__get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Order UUID
+            title: Order Id
+          description: Order UUID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/orders/{order_id}/status:
+    put:
+      tags:
+        - orders
+      summary: Update Order Status
+      description: Update order status (admin only)
+      operationId: update_order_status_api_orders__order_id__status_put
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Order UUID
+            title: Order Id
+          description: Order UUID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderStatusUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/orders/{order_id}/tracking:
+    get:
+      tags:
+        - orders
+      summary: Track Order
+      description: Track order status and history
+      operationId: track_order_api_orders__order_id__tracking_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Order UUID
+            title: Order Id
+          description: Order UUID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderTrackingResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/orders/{order_id}/cancel:
+    post:
+      tags:
+        - orders
+      summary: Cancel Order
+      description: Cancel an order
+      operationId: cancel_order_api_orders__order_id__cancel_post
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Order UUID
+            title: Order Id
+          description: Order UUID
+        - name: reason
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Reason
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/orders/{order_id}/reorder:
+    post:
+      tags:
+        - orders
+      summary: Reorder
+      description: Reorder items from a previous order
+      operationId: reorder_api_orders__order_id__reorder_post
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Order UUID
+            title: Order Id
+          description: Order UUID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/orders/{order_id}/status/admin:
+    put:
+      tags:
+        - orders
+      summary: Admin Update Order Status
+      description: Update order status (admin only)
+      operationId: admin_update_order_status_api_orders__order_id__status_admin_put
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Order UUID
+            title: Order Id
+          description: Order UUID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderStatusUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/dashboard:
+    get:
+      tags:
+        - admin
+      summary: Get Comprehensive Dashboard
+      description: Get comprehensive dashboard statistics
+      operationId: get_comprehensive_dashboard_api_admin_dashboard_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+        - HTTPBearer: []
+  /api/admin/analytics/trends:
+    get:
+      tags:
+        - admin
+      summary: Get Analytics Trends
+      description: Get trend analytics for various metrics
+      operationId: get_analytics_trends_api_admin_analytics_trends_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: days
+          in: query
+          required: false
+          schema:
+            type: integer
+            maximum: 365
+            minimum: 7
+            default: 30
+            title: Days
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/users:
+    get:
+      tags:
+        - admin
+      summary: List Users
+      description: List users with advanced filtering and search
+      operationId: list_users_api_admin_users_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: skip
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+            title: Skip
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            maximum: 1000
+            default: 100
+            title: Limit
+        - name: search
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Search
+        - name: role
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Role
+        - name: is_active
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: boolean
+              - type: 'null'
+            title: Is Active
+        - name: sort_by
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: ^(created_at|username|email|last_active)$
+            default: created_at
+            title: Sort By
+        - name: sort_order
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: ^(asc|desc)$
+            default: desc
+            title: Sort Order
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+        - admin
+      summary: Create User
+      description: Create a new user
+      operationId: create_user_api_admin_users_post
+      security:
+        - HTTPBearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/users/{user_id}:
+    get:
+      tags:
+        - admin
+      summary: Get User Details
+      description: Get detailed user information
+      operationId: get_user_details_api_admin_users__user_id__get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: User Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+        - admin
+      summary: Update User
+      description: Update user information
+      operationId: update_user_api_admin_users__user_id__put
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: User Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+        - admin
+      summary: Delete User
+      description: Soft delete a user (deactivate)
+      operationId: delete_user_api_admin_users__user_id__delete
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: User Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/users/{user_id}/activate:
+    post:
+      tags:
+        - admin
+      summary: Activate User
+      description: Activate a deactivated user
+      operationId: activate_user_api_admin_users__user_id__activate_post
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: User Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/roles:
+    get:
+      tags:
+        - admin
+      summary: Admin List Roles
+      description: List all roles with permissions
+      operationId: admin_list_roles_api_admin_roles_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+        - HTTPBearer: []
+  /api/admin/permissions:
+    get:
+      tags:
+        - admin
+      summary: Admin List Permissions
+      description: List all permissions
+      operationId: admin_list_permissions_api_admin_permissions_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+        - HTTPBearer: []
+  /api/admin/users/{user_id}/roles/{role_id}:
+    post:
+      tags:
+        - admin
+      summary: Assign Role To User
+      description: Assign a role to a user
+      operationId: assign_role_to_user_api_admin_users__user_id__roles__role_id__post
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: User Id
+        - name: role_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Role Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+        - admin
+      summary: Remove Role From User
+      description: Remove a role from a user
+      operationId: remove_role_from_user_api_admin_users__user_id__roles__role_id__delete
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: User Id
+        - name: role_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Role Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/users/bulk-activate:
+    post:
+      tags:
+        - admin
+      summary: Bulk Activate Users
+      description: Bulk activate users
+      operationId: bulk_activate_users_api_admin_users_bulk_activate_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              items:
+                type: string
+                format: uuid
+              type: array
+              title: User Ids
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - HTTPBearer: []
+  /api/admin/users/bulk-deactivate:
+    post:
+      tags:
+        - admin
+      summary: Bulk Deactivate Users
+      description: Bulk deactivate users
+      operationId: bulk_deactivate_users_api_admin_users_bulk_deactivate_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              items:
+                type: string
+                format: uuid
+              type: array
+              title: User Ids
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - HTTPBearer: []
+  /api/admin/users/export:
+    get:
+      tags:
+        - admin
+      summary: Export Users
+      description: Export users data
+      operationId: export_users_api_admin_users_export_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: format
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: ^(csv|json)$
+            default: csv
+            title: Format
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/products:
+    get:
+      tags:
+        - admin
+      summary: List Products
+      description: List products with advanced filtering and search
+      operationId: list_products_api_admin_products_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: skip
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+            title: Skip
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            maximum: 1000
+            default: 100
+            title: Limit
+        - name: search
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Search
+        - name: category
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Category
+        - name: is_active
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: boolean
+              - type: 'null'
+            title: Is Active
+        - name: in_stock
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: boolean
+              - type: 'null'
+            title: In Stock
+        - name: price_min
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: number
+                minimum: 0
+              - type: 'null'
+            title: Price Min
+        - name: price_max
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: number
+                minimum: 0
+              - type: 'null'
+            title: Price Max
+        - name: sort_by
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: ^(created_at|name_en|price|stock_quantity)$
+            default: created_at
+            title: Sort By
+        - name: sort_order
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: ^(asc|desc)$
+            default: desc
+            title: Sort Order
+        - name: language
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: ^(en|fr)$
+            default: en
+            title: Language
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+        - admin
+      summary: Create Product
+      description: Create a new product
+      operationId: create_product_api_admin_products_post
+      security:
+        - HTTPBearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              title: Product Data
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/products/{product_id}:
+    get:
+      tags:
+        - admin
+      summary: Get Product Details
+      description: Get detailed product information
+      operationId: get_product_details_api_admin_products__product_id__get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: Product Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+        - admin
+      summary: Update Product
+      description: Update product information
+      operationId: update_product_api_admin_products__product_id__put
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: Product Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              title: Product Data
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+        - admin
+      summary: Delete Product
+      description: Delete a product (soft delete by default)
+      operationId: delete_product_api_admin_products__product_id__delete
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: Product Id
+        - name: hard_delete
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+            title: Hard Delete
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/products/{product_id}/activate:
+    post:
+      tags:
+        - admin
+      summary: Activate Product
+      description: Activate a deactivated product
+      operationId: activate_product_api_admin_products__product_id__activate_post
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: Product Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/products/{product_id}/stock:
+    post:
+      tags:
+        - admin
+      summary: Update Product Stock
+      description: Update product stock quantity
+      operationId: update_product_stock_api_admin_products__product_id__stock_post
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: Product Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              title: Stock Data
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/product-categories:
+    get:
+      tags:
+        - admin
+      summary: List Product Categories
+      description: List all product categories
+      operationId: list_product_categories_api_admin_product_categories_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+        - HTTPBearer: []
+    post:
+      tags:
+        - admin
+      summary: Create Product Category
+      description: Create a new product category
+      operationId: create_product_category_api_admin_product_categories_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              type: object
+              title: Category Data
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - HTTPBearer: []
+  /api/admin/product-categories/{category_id}:
+    put:
+      tags:
+        - admin
+      summary: Update Product Category
+      description: Update product category
+      operationId: update_product_category_api_admin_product_categories__category_id__put
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: category_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: Category Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              title: Category Data
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+        - admin
+      summary: Delete Product Category
+      description: Delete product category
+      operationId: delete_product_category_api_admin_product_categories__category_id__delete
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: category_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: Category Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/products/bulk-activate:
+    post:
+      tags:
+        - admin
+      summary: Bulk Activate Products
+      description: Bulk activate products
+      operationId: bulk_activate_products_api_admin_products_bulk_activate_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              items:
+                type: string
+                format: uuid
+              type: array
+              title: Product Ids
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - HTTPBearer: []
+  /api/admin/products/bulk-deactivate:
+    post:
+      tags:
+        - admin
+      summary: Bulk Deactivate Products
+      description: Bulk deactivate products
+      operationId: bulk_deactivate_products_api_admin_products_bulk_deactivate_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              items:
+                type: string
+                format: uuid
+              type: array
+              title: Product Ids
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - HTTPBearer: []
+  /api/admin/products/bulk-update-category:
+    post:
+      tags:
+        - admin
+      summary: Bulk Update Product Category
+      description: Bulk update product category
+      operationId: bulk_update_product_category_api_admin_products_bulk_update_category_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              type: object
+              title: Data
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - HTTPBearer: []
+  /api/admin/products/bulk-update-price:
+    post:
+      tags:
+        - admin
+      summary: Bulk Update Product Price
+      description: Bulk update product prices
+      operationId: bulk_update_product_price_api_admin_products_bulk_update_price_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              type: object
+              title: Data
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - HTTPBearer: []
+  /api/admin/products/export:
+    get:
+      tags:
+        - admin
+      summary: Export Products
+      description: Export products data
+      operationId: export_products_api_admin_products_export_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: format
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: ^(csv|json)$
+            default: csv
+            title: Format
+        - name: language
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: ^(en|fr)$
+            default: en
+            title: Language
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/products/{product_id}/generate-embedding:
+    post:
+      tags:
+        - admin
+      summary: Generate Product Embedding
+      description: Generate embedding for a specific product
+      operationId: generate_product_embedding_api_admin_products__product_id__generate_embedding_post
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: Product Id
+        - name: language
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: ^(en|fr)$
+            default: en
+            title: Language
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/products/generate-all-embeddings:
+    post:
+      tags:
+        - admin
+      summary: Generate All Product Embeddings
+      description: Generate embeddings for all products
+      operationId: generate_all_product_embeddings_api_admin_products_generate_all_embeddings_post
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: language
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: ^(en|fr)$
+            default: en
+            title: Language
+        - name: force_regenerate
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: true
+            title: Force Regenerate
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/orders:
+    get:
+      tags:
+        - admin
+      summary: List Orders
+      description: List orders with advanced filtering and search
+      operationId: list_orders_api_admin_orders_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: skip
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+            title: Skip
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            maximum: 1000
+            default: 100
+            title: Limit
+        - name: search
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Search
+        - name: status
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Status
+        - name: payment_status
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Payment Status
+        - name: user_id
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+                format: uuid
+              - type: 'null'
+            title: User Id
+        - name: date_from
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+                format: date-time
+              - type: 'null'
+            title: Date From
+        - name: date_to
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+                format: date-time
+              - type: 'null'
+            title: Date To
+        - name: min_amount
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: number
+                minimum: 0
+              - type: 'null'
+            title: Min Amount
+        - name: max_amount
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: number
+                minimum: 0
+              - type: 'null'
+            title: Max Amount
+        - name: sort_by
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: ^(created_at|total_amount|updated_at)$
+            default: created_at
+            title: Sort By
+        - name: sort_order
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: ^(asc|desc)$
+            default: desc
+            title: Sort Order
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/orders/analytics:
+    get:
+      tags:
+        - admin
+      summary: Get Order Analytics
+      description: Get comprehensive order analytics
+      operationId: get_order_analytics_api_admin_orders_analytics_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: days
+          in: query
+          required: false
+          schema:
+            type: integer
+            maximum: 365
+            minimum: 1
+            default: 30
+            title: Days
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/orders/{order_id}:
+    get:
+      tags:
+        - admin
+      summary: Get Order Details
+      description: Get detailed order information
+      operationId: get_order_details_api_admin_orders__order_id__get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: Order Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+        - admin
+      summary: Update Order
+      description: Update order information
+      operationId: update_order_api_admin_orders__order_id__put
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: Order Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              title: Order Data
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+        - admin
+      summary: Cancel Order
+      description: Cancel an order
+      operationId: cancel_order_api_admin_orders__order_id__delete
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: Order Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              title: Cancellation Data
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/orders/{order_id}/status:
+    put:
+      tags:
+        - admin
+      summary: Update Order Status
+      description: Update order status
+      operationId: update_order_status_api_admin_orders__order_id__status_put
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: Order Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderStatusUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/orders/{order_id}/payment-status:
+    put:
+      tags:
+        - admin
+      summary: Update Payment Status
+      description: Update order payment status
+      operationId: update_payment_status_api_admin_orders__order_id__payment_status_put
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: Order Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              title: Payment Data
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/orders/{order_id}/refund:
+    post:
+      tags:
+        - admin
+      summary: Refund Order
+      description: Process order refund
+      operationId: refund_order_api_admin_orders__order_id__refund_post
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: Order Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              title: Refund Data
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/orders/bulk-update-status:
+    post:
+      tags:
+        - admin
+      summary: Bulk Update Order Status
+      description: Bulk update order status
+      operationId: bulk_update_order_status_api_admin_orders_bulk_update_status_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              type: object
+              title: Data
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - HTTPBearer: []
+  /api/admin/orders/export:
+    get:
+      tags:
+        - admin
+      summary: Export Orders
+      description: Export orders data
+      operationId: export_orders_api_admin_orders_export_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: format
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: ^(csv|json)$
+            default: csv
+            title: Format
+        - name: status
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Status
+        - name: date_from
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+                format: date-time
+              - type: 'null'
+            title: Date From
+        - name: date_to
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+                format: date-time
+              - type: 'null'
+            title: Date To
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/conversations:
+    get:
+      tags:
+        - admin
+      summary: List Conversations
+      description: List conversations with advanced filtering
+      operationId: list_conversations_api_admin_conversations_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: skip
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+            title: Skip
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            maximum: 1000
+            default: 100
+            title: Limit
+        - name: search
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Search
+        - name: user_id
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+                format: uuid
+              - type: 'null'
+            title: User Id
+        - name: is_active
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: boolean
+              - type: 'null'
+            title: Is Active
+        - name: language
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Language
+        - name: intent
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Intent
+        - name: date_from
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+                format: date-time
+              - type: 'null'
+            title: Date From
+        - name: date_to
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+                format: date-time
+              - type: 'null'
+            title: Date To
+        - name: sort_by
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: ^(created_at|last_message_at|updated_at)$
+            default: last_message_at
+            title: Sort By
+        - name: sort_order
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: ^(asc|desc)$
+            default: desc
+            title: Sort Order
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/conversations/analytics:
+    get:
+      tags:
+        - admin
+      summary: Get Conversation Analytics
+      description: Get conversation analytics
+      operationId: get_conversation_analytics_api_admin_conversations_analytics_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: days
+          in: query
+          required: false
+          schema:
+            type: integer
+            maximum: 365
+            minimum: 1
+            default: 30
+            title: Days
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/conversations/{conversation_id}:
+    get:
+      tags:
+        - admin
+      summary: Get Conversation Details
+      description: Get detailed conversation information
+      operationId: get_conversation_details_api_admin_conversations__conversation_id__get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: conversation_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: Conversation Id
+        - name: include_messages
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: true
+            title: Include Messages
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+        - admin
+      summary: Update Conversation
+      description: Update conversation information
+      operationId: update_conversation_api_admin_conversations__conversation_id__put
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: conversation_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: Conversation Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              title: Conversation Data
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+        - admin
+      summary: Delete Conversation
+      description: Delete a conversation
+      operationId: delete_conversation_api_admin_conversations__conversation_id__delete
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: conversation_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: Conversation Id
+        - name: hard_delete
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+            title: Hard Delete
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/support-tickets:
+    get:
+      tags:
+        - admin
+      summary: List Support Tickets
+      description: List support tickets with advanced filtering
+      operationId: list_support_tickets_api_admin_support_tickets_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: skip
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+            title: Skip
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            maximum: 1000
+            default: 100
+            title: Limit
+        - name: search
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Search
+        - name: status
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Status
+        - name: category
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Category
+        - name: priority
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Priority
+        - name: user_id
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+                format: uuid
+              - type: 'null'
+            title: User Id
+        - name: assigned_to
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Assigned To
+        - name: date_from
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+                format: date-time
+              - type: 'null'
+            title: Date From
+        - name: date_to
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+                format: date-time
+              - type: 'null'
+            title: Date To
+        - name: sort_by
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: ^(created_at|updated_at|priority)$
+            default: created_at
+            title: Sort By
+        - name: sort_order
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: ^(asc|desc)$
+            default: desc
+            title: Sort Order
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+        - admin
+      summary: Create Support Ticket
+      description: Create a new support ticket
+      operationId: create_support_ticket_api_admin_support_tickets_post
+      security:
+        - HTTPBearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSupportTicketRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/support-tickets/{ticket_id}:
+    get:
+      tags:
+        - admin
+      summary: Get Support Ticket Details
+      description: Get detailed support ticket information
+      operationId: get_support_ticket_details_api_admin_support_tickets__ticket_id__get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: ticket_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: Ticket Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+        - admin
+      summary: Update Support Ticket
+      description: Update support ticket
+      operationId: update_support_ticket_api_admin_support_tickets__ticket_id__put
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: ticket_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: Ticket Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              title: Ticket Data
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/support-tickets/{ticket_id}/assign:
+    post:
+      tags:
+        - admin
+      summary: Assign Support Ticket
+      description: Assign support ticket to a team member
+      operationId: assign_support_ticket_api_admin_support_tickets__ticket_id__assign_post
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: ticket_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: Ticket Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              title: Assignment Data
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/support-tickets/{ticket_id}/resolve:
+    post:
+      tags:
+        - admin
+      summary: Resolve Support Ticket
+      description: Resolve/close support ticket
+      operationId: resolve_support_ticket_api_admin_support_tickets__ticket_id__resolve_post
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: ticket_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: Ticket Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              title: Resolution Data
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/support-tickets/analytics:
+    get:
+      tags:
+        - admin
+      summary: Get Support Analytics
+      description: Get support ticket analytics
+      operationId: get_support_analytics_api_admin_support_tickets_analytics_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: days
+          in: query
+          required: false
+          schema:
+            type: integer
+            maximum: 365
+            minimum: 1
+            default: 30
+            title: Days
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/carts:
+    get:
+      tags:
+        - admin
+      summary: List Active Carts
+      description: List active shopping carts
+      operationId: list_active_carts_api_admin_carts_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: skip
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+            title: Skip
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            maximum: 1000
+            default: 100
+            title: Limit
+        - name: user_id
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+                format: uuid
+              - type: 'null'
+            title: User Id
+        - name: min_items
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: integer
+                minimum: 0
+              - type: 'null'
+            title: Min Items
+        - name: min_value
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: number
+                minimum: 0
+              - type: 'null'
+            title: Min Value
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/carts/analytics:
+    get:
+      tags:
+        - admin
+      summary: Get Cart Analytics
+      description: Get cart analytics
+      operationId: get_cart_analytics_api_admin_carts_analytics_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: days
+          in: query
+          required: false
+          schema:
+            type: integer
+            maximum: 365
+            minimum: 1
+            default: 30
+            title: Days
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/system/settings:
+    get:
+      tags:
+        - admin
+      summary: Get System Settings
+      description: Get system configuration settings
+      operationId: get_system_settings_api_admin_system_settings_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+        - HTTPBearer: []
+  /api/admin/system/product-fields:
+    post:
+      tags:
+        - admin
+      summary: Create Product Field
+      description: Create a new custom product field
+      operationId: create_product_field_api_admin_system_product_fields_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              type: object
+              title: Field Data
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - HTTPBearer: []
+  /api/admin/export/conversations:
+    get:
+      tags:
+        - admin
+      summary: Export Conversations
+      description: Export conversations data
+      operationId: export_conversations_api_admin_export_conversations_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: format
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: ^(csv|json)$
+            default: csv
+            title: Format
+        - name: date_from
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+                format: date-time
+              - type: 'null'
+            title: Date From
+        - name: date_to
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+                format: date-time
+              - type: 'null'
+            title: Date To
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/admin/export/support-tickets:
+    get:
+      tags:
+        - admin
+      summary: Export Support Tickets
+      description: Export support tickets data
+      operationId: export_support_tickets_api_admin_export_support_tickets_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: format
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: ^(csv|json)$
+            default: csv
+            title: Format
+        - name: status
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Status
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/journey/products/{product_id}/view:
+    get:
+      tags:
+        - user-journey
+      summary: View Product Journey
+      description: Complete product viewing journey with optional actions
+      operationId: view_product_journey_api_journey_products__product_id__view_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Product UUID
+            title: Product Id
+          description: Product UUID
+        - name: action
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: ^(view|add_to_cart|add_to_wishlist|buy_now)$
+            default: view
+            title: Action
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/journey/cart/manage:
+    get:
+      tags:
+        - user-journey
+      summary: Manage Cart Journey
+      description: Complete cart management journey
+      operationId: manage_cart_journey_api_journey_cart_manage_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: checkout
+          in: query
+          required: false
+          schema:
+            type: boolean
+            description: Proceed to checkout
+            default: false
+            title: Checkout
+          description: Proceed to checkout
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/journey/purchase:
+    post:
+      tags:
+        - user-journey
+      summary: Purchase Journey
+      description: Complete purchase journey
+      operationId: purchase_journey_api_journey_purchase_post
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: product_id
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+                format: uuid
+              - type: 'null'
+            description: Product ID for quick purchase
+            title: Product Id
+          description: Product ID for quick purchase
+        - name: cart_checkout
+          in: query
+          required: false
+          schema:
+            type: boolean
+            description: Checkout entire cart
+            default: false
+            title: Cart Checkout
+          description: Checkout entire cart
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/journey/flow/complete:
+    get:
+      tags:
+        - user-journey
+      summary: Complete Ecommerce Flow
+      description: Demonstrate complete e-commerce flow
+      operationId: complete_ecommerce_flow_api_journey_flow_complete_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+        - HTTPBearer: []
+  /api/cart/clear:
+    delete:
+      tags:
+        - cart
+      summary: Clear Cart
+      description: Clear all items from cart
+      operationId: clear_cart_api_cart_clear_delete
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+        - HTTPBearer: []
+  /api/cart/count:
+    get:
+      tags:
+        - cart
+      summary: Get Cart Count
+      description: Get cart item count
+      operationId: get_cart_count_api_cart_count_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+        - HTTPBearer: []
+  /api/cart/save:
+    post:
+      tags:
+        - cart
+      summary: Save For Later
+      description: Save cart item for later
+      operationId: save_for_later_api_cart_save_post
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: item_id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+            title: Item Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/cart/:
+    get:
+      tags:
+        - cart
+      summary: Get Cart
+      description: Get user's cart
+      operationId: get_cart_api_cart__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartResponse'
+      security:
+        - HTTPBearer: []
+  /api/cart/add:
+    post:
+      tags:
+        - cart
+      summary: Add To Cart
+      description: Add item to cart
+      operationId: add_to_cart_api_cart_add_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddToCartRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartItemResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - HTTPBearer: []
+  /api/cart/summary:
+    get:
+      tags:
+        - cart
+      summary: Get Cart Summary
+      description: Get cart summary with totals and item count
+      operationId: get_cart_summary_api_cart_summary_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+        - HTTPBearer: []
+  /api/cart/items/{item_id}:
+    get:
+      tags:
+        - cart
+      summary: Get Cart Item
+      description: Get specific cart item
+      operationId: get_cart_item_api_cart_items__item_id__get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: item_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Cart item UUID
+            title: Item Id
+          description: Cart item UUID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartItemResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+        - cart
+      summary: Update Cart Item
+      description: Update cart item quantity
+      operationId: update_cart_item_api_cart_items__item_id__put
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: item_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Cart item UUID
+            title: Item Id
+          description: Cart item UUID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCartItemRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartItemResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+        - cart
+      summary: Remove Cart Item
+      description: Remove item from cart
+      operationId: remove_cart_item_api_cart_items__item_id__delete
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: item_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Cart item UUID
+            title: Item Id
+          description: Cart item UUID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/cart/items/{item_id}/quantity:
+    patch:
+      tags:
+        - cart
+      summary: Update Cart Item Quantity
+      description: Update cart item quantity with specific actions
+      operationId: update_cart_item_quantity_api_cart_items__item_id__quantity_patch
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: item_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Cart item UUID
+            title: Item Id
+          description: Cart item UUID
+        - name: action
+          in: query
+          required: true
+          schema:
+            type: string
+            pattern: ^(increase|decrease|set)$
+            title: Action
+        - name: amount
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+            title: Amount
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/support/tickets:
+    post:
+      tags:
+        - support
+      summary: Create Support Ticket
+      description: Create a new support ticket
+      operationId: create_support_ticket_api_support_tickets_post
+      security:
+        - HTTPBearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSupportTicketRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportTicketResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+        - support
+      summary: Get User Tickets
+      description: Get user's support tickets
+      operationId: get_user_tickets_api_support_tickets_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            maximum: 100
+            default: 20
+            title: Limit
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+            title: Offset
+        - name: status
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Status
+        - name: category
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Category
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SupportTicketResponse'
+                title: Response Get User Tickets Api Support Tickets Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/support/tickets/{ticket_id}/messages:
+    get:
+      tags:
+        - support
+      summary: Get Ticket Messages
+      description: Get messages for a support ticket
+      operationId: get_ticket_messages_api_support_tickets__ticket_id__messages_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: ticket_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Ticket UUID
+            title: Ticket Id
+          description: Ticket UUID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+        - support
+      summary: Add Ticket Message
+      description: Add message to support ticket
+      operationId: add_ticket_message_api_support_tickets__ticket_id__messages_post
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: ticket_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Ticket UUID
+            title: Ticket Id
+          description: Ticket UUID
+        - name: message
+          in: query
+          required: true
+          schema:
+            type: string
+            title: Message
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/support/categories:
+    get:
+      tags:
+        - support
+      summary: Get Support Categories
+      description: Get available support categories
+      operationId: get_support_categories_api_support_categories_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /api/support/stats:
+    get:
+      tags:
+        - support
+      summary: Get User Ticket Stats
+      description: Get user's support ticket statistics
+      operationId: get_user_ticket_stats_api_support_stats_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportTicketStatsResponse'
+      security:
+        - HTTPBearer: []
+  /api/support/admin/tickets:
+    get:
+      tags:
+        - support
+      summary: Admin Get All Tickets
+      description: Get all support tickets (admin only)
+      operationId: admin_get_all_tickets_api_support_admin_tickets_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            maximum: 1000
+            default: 100
+            title: Limit
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+            title: Offset
+        - name: status
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Status
+        - name: category
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Category
+        - name: priority
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Priority
+        - name: assigned_to
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Assigned To
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/support/admin/tickets/{ticket_id}/assign:
+    put:
+      tags:
+        - support
+      summary: Admin Assign Ticket
+      description: Assign ticket to support agent (admin only)
+      operationId: admin_assign_ticket_api_support_admin_tickets__ticket_id__assign_put
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: ticket_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Ticket UUID
+            title: Ticket Id
+          description: Ticket UUID
+        - name: assigned_to
+          in: query
+          required: true
+          schema:
+            type: string
+            title: Assigned To
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/support/admin/tickets/{ticket_id}/status:
+    put:
+      tags:
+        - support
+      summary: Admin Update Ticket Status
+      description: Update ticket status (admin only)
+      operationId: admin_update_ticket_status_api_support_admin_tickets__ticket_id__status_put
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: ticket_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Ticket UUID
+            title: Ticket Id
+          description: Ticket UUID
+        - name: new_status
+          in: query
+          required: true
+          schema:
+            type: string
+            title: New Status
+        - name: notes
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Notes
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/support/admin/tickets/{ticket_id}/reply:
+    post:
+      tags:
+        - support
+      summary: Admin Reply To Ticket
+      description: Reply to support ticket (admin only)
+      operationId: admin_reply_to_ticket_api_support_admin_tickets__ticket_id__reply_post
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: ticket_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Ticket UUID
+            title: Ticket Id
+          description: Ticket UUID
+        - name: message
+          in: query
+          required: true
+          schema:
+            type: string
+            title: Message
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/support/tickets/{ticket_id}:
+    get:
+      tags:
+        - support
+      summary: Get Ticket
+      description: Get specific support ticket
+      operationId: get_ticket_api_support_tickets__ticket_id__get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: ticket_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Ticket UUID
+            title: Ticket Id
+          description: Ticket UUID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportTicketResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+        - support
+      summary: Update Ticket
+      description: Update support ticket (user can only update description)
+      operationId: update_ticket_api_support_tickets__ticket_id__put
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: ticket_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Ticket UUID
+            title: Ticket Id
+          description: Ticket UUID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSupportTicketRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportTicketResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+        - support
+      summary: Delete Ticket
+      description: Delete support ticket (only if status is 'open')
+      operationId: delete_ticket_api_support_tickets__ticket_id__delete
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: ticket_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Ticket UUID
+            title: Ticket Id
+          description: Ticket UUID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/wishlist/add:
+    post:
+      tags:
+        - wishlist
+      summary: Add To Wishlist
+      description: Add item to wishlist
+      operationId: add_to_wishlist_api_wishlist_add_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddToWishlistRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WishlistItemResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - HTTPBearer: []
+  /api/wishlist/:
+    get:
+      tags:
+        - wishlist
+      summary: Get Wishlist
+      description: Get user's wishlist
+      operationId: get_wishlist_api_wishlist__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WishlistResponse'
+      security:
+        - HTTPBearer: []
+  /api/wishlist/items/{item_id}:
+    delete:
+      tags:
+        - wishlist
+      summary: Remove From Wishlist
+      description: Remove item from wishlist
+      operationId: remove_from_wishlist_api_wishlist_items__item_id__delete
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: item_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Wishlist item UUID
+            title: Item Id
+          description: Wishlist item UUID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/wishlist/items/{item_id}/move-to-cart:
+    post:
+      tags:
+        - wishlist
+      summary: Move To Cart
+      description: Move wishlist item to cart
+      operationId: move_to_cart_api_wishlist_items__item_id__move_to_cart_post
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: item_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Wishlist item UUID
+            title: Item Id
+          description: Wishlist item UUID
+        - name: quantity
+          in: query
+          required: false
+          schema:
+            type: integer
+            maximum: 100
+            minimum: 1
+            default: 1
+            title: Quantity
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/wishlist/clear:
+    delete:
+      tags:
+        - wishlist
+      summary: Clear Wishlist
+      description: Clear all items from wishlist
+      operationId: clear_wishlist_api_wishlist_clear_delete
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+        - HTTPBearer: []
+  /api/wishlist/count:
+    get:
+      tags:
+        - wishlist
+      summary: Get Wishlist Count
+      description: Get wishlist item count
+      operationId: get_wishlist_count_api_wishlist_count_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+        - HTTPBearer: []
+  /api/wishlist/check/{product_id}:
+    get:
+      tags:
+        - wishlist
+      summary: Check In Wishlist
+      description: Check if product is in wishlist
+      operationId: check_in_wishlist_api_wishlist_check__product_id__get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Product UUID
+            title: Product Id
+          description: Product UUID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/orders-enhanced/api/orders/checkout:
+    post:
+      tags:
+        - orders-enhanced
+        - orders
+      summary: Checkout
+      description: Checkout user's cart and create order
+      operationId: checkout_api_orders_enhanced_api_orders_checkout_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckoutRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - HTTPBearer: []
+  /api/orders-enhanced/api/orders/quick-checkout:
+    post:
+      tags:
+        - orders-enhanced
+        - orders
+      summary: Quick Checkout
+      description: Quick checkout with product and quantity
+      operationId: quick_checkout_api_orders_enhanced_api_orders_quick_checkout_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuickOrderRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - HTTPBearer: []
+  /api/orders-enhanced/api/orders/history:
+    get:
+      tags:
+        - orders-enhanced
+        - orders
+      summary: Get Order History
+      description: Get user's order history with filters
+      operationId: get_order_history_api_orders_enhanced_api_orders_history_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            maximum: 100
+            default: 10
+            title: Limit
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+            title: Offset
+        - name: status
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Status
+        - name: date_from
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+                format: date-time
+              - type: 'null'
+            title: Date From
+        - name: date_to
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+                format: date-time
+              - type: 'null'
+            title: Date To
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderResponse'
+                title: Response Get Order History Api Orders Enhanced Api Orders History Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/orders-enhanced/api/orders/analytics/spending:
+    get:
+      tags:
+        - orders-enhanced
+        - orders
+      summary: Get Spending Analytics
+      description: Get user's spending analytics
+      operationId: get_spending_analytics_api_orders_enhanced_api_orders_analytics_spending_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: period
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: ^(week|month|quarter|year)$
+            default: month
+            title: Period
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/orders-enhanced/api/orders/stats:
+    get:
+      tags:
+        - orders-enhanced
+        - orders
+      summary: Get Order Stats
+      description: Get user's order statistics
+      operationId: get_order_stats_api_orders_enhanced_api_orders_stats_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+        - HTTPBearer: []
+  /api/orders-enhanced/api/orders/admin/all:
+    get:
+      tags:
+        - orders-enhanced
+        - orders
+      summary: Admin Get All Orders
+      description: Get all orders (admin only)
+      operationId: admin_get_all_orders_api_orders_enhanced_api_orders_admin_all_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            maximum: 1000
+            default: 100
+            title: Limit
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+            title: Offset
+        - name: status
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Status
+        - name: user_id
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+                format: uuid
+              - type: 'null'
+            title: User Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/orders-enhanced/api/orders/:
+    get:
+      tags:
+        - orders-enhanced
+        - orders
+      summary: Get User Orders
+      description: Get user's order history
+      operationId: get_user_orders_api_orders_enhanced_api_orders__get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 10
+            title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderResponse'
+                title: Response Get User Orders Api Orders Enhanced Api Orders  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/orders-enhanced/api/orders/{order_id}:
+    get:
+      tags:
+        - orders-enhanced
+        - orders
+      summary: Get Order
+      description: Get specific order
+      operationId: get_order_api_orders_enhanced_api_orders__order_id__get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Order UUID
+            title: Order Id
+          description: Order UUID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/orders-enhanced/api/orders/{order_id}/status:
+    put:
+      tags:
+        - orders-enhanced
+        - orders
+      summary: Update Order Status
+      description: Update order status (admin only)
+      operationId: update_order_status_api_orders_enhanced_api_orders__order_id__status_put
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Order UUID
+            title: Order Id
+          description: Order UUID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderStatusUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/orders-enhanced/api/orders/{order_id}/tracking:
+    get:
+      tags:
+        - orders-enhanced
+        - orders
+      summary: Track Order
+      description: Track order status and history
+      operationId: track_order_api_orders_enhanced_api_orders__order_id__tracking_get
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Order UUID
+            title: Order Id
+          description: Order UUID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderTrackingResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/orders-enhanced/api/orders/{order_id}/cancel:
+    post:
+      tags:
+        - orders-enhanced
+        - orders
+      summary: Cancel Order
+      description: Cancel an order
+      operationId: cancel_order_api_orders_enhanced_api_orders__order_id__cancel_post
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Order UUID
+            title: Order Id
+          description: Order UUID
+        - name: reason
+          in: query
+          required: false
+          schema:
+            anyOf:
+              - type: string
+              - type: 'null'
+            title: Reason
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/orders-enhanced/api/orders/{order_id}/reorder:
+    post:
+      tags:
+        - orders-enhanced
+        - orders
+      summary: Reorder
+      description: Reorder items from a previous order
+      operationId: reorder_api_orders_enhanced_api_orders__order_id__reorder_post
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Order UUID
+            title: Order Id
+          description: Order UUID
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/orders-enhanced/api/orders/{order_id}/status/admin:
+    put:
+      tags:
+        - orders-enhanced
+        - orders
+      summary: Admin Update Order Status
+      description: Update order status (admin only)
+      operationId: admin_update_order_status_api_orders_enhanced_api_orders__order_id__status_admin_put
+      security:
+        - HTTPBearer: []
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: Order UUID
+            title: Order Id
+          description: Order UUID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderStatusUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /:
+    get:
+      summary: Root
+      operationId: root__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /health:
+    get:
+      summary: Health Check
+      operationId: health_check_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /api/endpoints:
+    get:
+      summary: List Endpoints
+      description: List all available API endpoints
+      operationId: list_endpoints_api_endpoints_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+components:
+  schemas:
+    AddToCartRequest:
+      properties:
+        product_id:
+          type: string
+          format: uuid
+          title: Product Id
+        quantity:
+          type: integer
+          maximum: 100
+          minimum: 1
+          title: Quantity
+          default: 1
+        product_options:
+          anyOf:
+            - additionalProperties: true
+              type: object
+            - type: 'null'
+          title: Product Options
+      type: object
+      required:
+        - product_id
+      title: AddToCartRequest
+    AddToWishlistRequest:
+      properties:
+        product_id:
+          type: string
+          format: uuid
+          title: Product Id
+        notes:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Notes
+      type: object
+      required:
+        - product_id
+      title: AddToWishlistRequest
+    Body_login_for_access_token_api_auth_token_post:
+      properties:
+        grant_type:
+          anyOf:
+            - type: string
+              pattern: ^password$
+            - type: 'null'
+          title: Grant Type
+        username:
+          type: string
+          title: Username
+        password:
+          type: string
+          format: password
+          title: Password
+        scope:
+          type: string
+          title: Scope
+          default: ''
+        client_id:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Client Id
+        client_secret:
+          anyOf:
+            - type: string
+            - type: 'null'
+          format: password
+          title: Client Secret
+      type: object
+      required:
+        - username
+        - password
+      title: Body_login_for_access_token_api_auth_token_post
+    CartItemOut:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+      type: object
+      required:
+        - id
+      title: CartItemOut
+    CartItemResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        product_id:
+          type: string
+          format: uuid
+          title: Product Id
+        product_name:
+          type: string
+          title: Product Name
+        product_code:
+          type: string
+          title: Product Code
+        product_image:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Product Image
+        quantity:
+          type: integer
+          title: Quantity
+        unit_price:
+          type: number
+          title: Unit Price
+        total_price:
+          type: number
+          title: Total Price
+        product_options:
+          additionalProperties: true
+          type: object
+          title: Product Options
+          default: {}
+        added_at:
+          type: string
+          format: date-time
+          title: Added At
+      type: object
+      required:
+        - id
+        - product_id
+        - product_name
+        - product_code
+        - quantity
+        - unit_price
+        - total_price
+        - added_at
+      title: CartItemResponse
+    CartResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/CartItemResponse'
+          type: array
+          title: Items
+        total_items:
+          type: integer
+          title: Total Items
+        total_amount:
+          type: number
+          title: Total Amount
+        currency:
+          type: string
+          title: Currency
+          default: USD
+      type: object
+      required:
+        - items
+        - total_items
+        - total_amount
+      title: CartResponse
+    CheckoutRequest:
+      properties:
+        conversation_id:
+          anyOf:
+            - type: string
+              format: uuid
+            - type: 'null'
+          title: Conversation Id
+        shipping_address:
+          anyOf:
+            - additionalProperties: true
+              type: object
+            - type: 'null'
+          title: Shipping Address
+        payment_method:
+          type: string
+          title: Payment Method
+          default: cash_on_delivery
+        order_notes:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Order Notes
+      type: object
+      title: CheckoutRequest
+    ConversationAnalytics:
+      properties:
+        conversation_id:
+          type: string
+          format: uuid
+          title: Conversation Id
+        total_messages:
+          type: integer
+          title: Total Messages
+        user_messages:
+          type: integer
+          title: User Messages
+        assistant_messages:
+          type: integer
+          title: Assistant Messages
+        intent_distribution:
+          additionalProperties:
+            type: integer
+          type: object
+          title: Intent Distribution
+        tool_usage:
+          additionalProperties:
+            type: integer
+          type: object
+          title: Tool Usage
+        successful_tools:
+          type: integer
+          title: Successful Tools
+        failed_tools:
+          type: integer
+          title: Failed Tools
+        response_type_distribution:
+          additionalProperties:
+            type: integer
+          type: object
+          title: Response Type Distribution
+        average_processing_time:
+          anyOf:
+            - type: number
+            - type: 'null'
+          title: Average Processing Time
+        total_processing_time:
+          anyOf:
+            - type: integer
+            - type: 'null'
+          title: Total Processing Time
+        total_errors:
+          type: integer
+          title: Total Errors
+        error_rate:
+          type: number
+          title: Error Rate
+        context_references_used:
+          type: integer
+          title: Context References Used
+        memory_references:
+          type: integer
+          title: Memory References
+      type: object
+      required:
+        - conversation_id
+        - total_messages
+        - user_messages
+        - assistant_messages
+        - intent_distribution
+        - tool_usage
+        - successful_tools
+        - failed_tools
+        - response_type_distribution
+        - average_processing_time
+        - total_processing_time
+        - total_errors
+        - error_rate
+        - context_references_used
+        - memory_references
+      title: ConversationAnalytics
+      description: Analytics data for a conversation
+    ConversationCreate:
+      properties:
+        title:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Title
+        language:
+          type: string
+          title: Language
+          default: en
+      type: object
+      title: ConversationCreate
+    ConversationOut:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+      type: object
+      required:
+        - id
+      title: ConversationOut
+    ConversationResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        title:
+          type: string
+          title: Title
+        language:
+          type: string
+          title: Language
+        is_active:
+          type: boolean
+          title: Is Active
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+      type: object
+      required:
+        - id
+        - title
+        - language
+        - is_active
+        - created_at
+        - updated_at
+      title: ConversationResponse
+    CreateSupportTicketRequest:
+      properties:
+        subject:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Subject
+        description:
+          type: string
+          maxLength: 2000
+          minLength: 10
+          title: Description
+        category:
+          anyOf:
+            - type: string
+              pattern: ^(technical|billing|shipping|product|account|general|refund|complaint)$
+            - type: 'null'
+          title: Category
+        priority:
+          type: string
+          pattern: ^(low|medium|high|urgent)$
+          title: Priority
+          default: medium
+        order_id:
+          anyOf:
+            - type: string
+              format: uuid
+            - type: 'null'
+          title: Order Id
+        conversation_id:
+          anyOf:
+            - type: string
+              format: uuid
+            - type: 'null'
+          title: Conversation Id
+      type: object
+      required:
+        - subject
+        - description
+      title: CreateSupportTicketRequest
+    EnhancedChatResponse:
+      properties:
+        success:
+          type: boolean
+          title: Success
+        response:
+          type: string
+          title: Response
+        response_type:
+          type: string
+          title: Response Type
+        intent:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Intent
+        entities:
+          additionalProperties: true
+          type: object
+          title: Entities
+          default: {}
+        confidence_score:
+          anyOf:
+            - type: number
+            - type: 'null'
+          title: Confidence Score
+        context_memory:
+          additionalProperties: true
+          type: object
+          title: Context Memory
+          default: {}
+        resolved_references:
+          additionalProperties: true
+          type: object
+          title: Resolved References
+          default: {}
+        tool_results:
+          additionalProperties: true
+          type: object
+          title: Tool Results
+          default: {}
+        session_data:
+          additionalProperties: true
+          type: object
+          title: Session Data
+          default: {}
+        ui_components:
+          additionalProperties: true
+          type: object
+          title: Ui Components
+          default: {}
+        conversation_id:
+          type: string
+          format: uuid
+          title: Conversation Id
+        conversation_turn:
+          anyOf:
+            - type: integer
+            - type: 'null'
+          title: Conversation Turn
+        error:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Error
+        has_error:
+          type: boolean
+          title: Has Error
+          default: false
+        processing_time_ms:
+          anyOf:
+            - type: integer
+            - type: 'null'
+          title: Processing Time Ms
+        model_version:
+          type: string
+          title: Model Version
+          default: claude-3-sonnet
+      type: object
+      required:
+        - success
+        - response
+        - response_type
+        - conversation_id
+      title: EnhancedChatResponse
+      description: Enhanced chat response with full context
+    EnhancedMessageResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        role:
+          type: string
+          title: Role
+        content:
+          type: string
+          title: Content
+        message_type:
+          type: string
+          title: Message Type
+        intent:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Intent
+        entities:
+          additionalProperties: true
+          type: object
+          title: Entities
+          default: {}
+        confidence_score:
+          anyOf:
+            - type: number
+            - type: 'null'
+          title: Confidence Score
+        tool_calls:
+          items:
+            type: string
+          type: array
+          title: Tool Calls
+          default: []
+        context_memory:
+          additionalProperties: true
+          type: object
+          title: Context Memory
+          default: {}
+        resolved_references:
+          additionalProperties: true
+          type: object
+          title: Resolved References
+          default: {}
+        tool_results:
+          additionalProperties: true
+          type: object
+          title: Tool Results
+          default: {}
+        session_data:
+          additionalProperties: true
+          type: object
+          title: Session Data
+          default: {}
+        response_type:
+          type: string
+          title: Response Type
+          default: text
+        ui_components:
+          additionalProperties: true
+          type: object
+          title: Ui Components
+          default: {}
+        user_preferences_snapshot:
+          additionalProperties: true
+          type: object
+          title: User Preferences Snapshot
+          default: {}
+        has_error:
+          type: boolean
+          title: Has Error
+          default: false
+        error_message:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Error Message
+        processing_time_ms:
+          anyOf:
+            - type: integer
+            - type: 'null'
+          title: Processing Time Ms
+        model_version:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Model Version
+        conversation_turn:
+          anyOf:
+            - type: integer
+            - type: 'null'
+          title: Conversation Turn
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+      type: object
+      required:
+        - id
+        - role
+        - content
+        - message_type
+        - created_at
+      title: EnhancedMessageResponse
+      description: Enhanced message response with full context and UI data
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    MessageCreate:
+      properties:
+        content:
+          type: string
+          title: Content
+        message_type:
+          type: string
+          title: Message Type
+          default: text
+      type: object
+      required:
+        - content
+      title: MessageCreate
+    MessageSearchResponse:
+      properties:
+        messages:
+          items:
+            $ref: '#/components/schemas/EnhancedMessageResponse'
+          type: array
+          title: Messages
+        total_count:
+          type: integer
+          title: Total Count
+        search_query:
+          type: string
+          title: Search Query
+        filters_applied:
+          additionalProperties: true
+          type: object
+          title: Filters Applied
+      type: object
+      required:
+        - messages
+        - total_count
+        - search_query
+        - filters_applied
+      title: MessageSearchResponse
+      description: Response for message search
+    OrderItemResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        product_id:
+          type: string
+          format: uuid
+          title: Product Id
+        product_name:
+          type: string
+          title: Product Name
+        product_code:
+          type: string
+          title: Product Code
+        quantity:
+          type: integer
+          title: Quantity
+        unit_price:
+          type: number
+          title: Unit Price
+        total_price:
+          type: number
+          title: Total Price
+      type: object
+      required:
+        - id
+        - product_id
+        - product_name
+        - product_code
+        - quantity
+        - unit_price
+        - total_price
+      title: OrderItemResponse
+    OrderOut:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+      type: object
+      required:
+        - id
+      title: OrderOut
+    OrderResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        status:
+          type: string
+          title: Status
+        total_amount:
+          type: number
+          title: Total Amount
+        currency:
+          type: string
+          title: Currency
+        payment_method:
+          type: string
+          title: Payment Method
+        payment_status:
+          type: string
+          title: Payment Status
+        shipping_address:
+          additionalProperties: true
+          type: object
+          title: Shipping Address
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        items:
+          items:
+            $ref: '#/components/schemas/OrderItemResponse'
+          type: array
+          title: Items
+      type: object
+      required:
+        - id
+        - status
+        - total_amount
+        - currency
+        - payment_method
+        - payment_status
+        - shipping_address
+        - created_at
+        - items
+      title: OrderResponse
+    OrderStatusUpdate:
+      properties:
+        new_status:
+          type: string
+          title: New Status
+        notes:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Notes
+      type: object
+      required:
+        - new_status
+      title: OrderStatusUpdate
+    OrderTrackingResponse:
+      properties:
+        order_id:
+          type: string
+          format: uuid
+          title: Order Id
+        current_status:
+          type: string
+          title: Current Status
+        payment_status:
+          type: string
+          title: Payment Status
+        estimated_delivery:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+          title: Estimated Delivery
+        tracking_number:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Tracking Number
+        status_history:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Status History
+      type: object
+      required:
+        - order_id
+        - current_status
+        - payment_status
+        - estimated_delivery
+        - tracking_number
+        - status_history
+      title: OrderTrackingResponse
+    PermissionOut:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+        description:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Description
+      type: object
+      required:
+        - id
+        - name
+        - description
+      title: PermissionOut
+    ProductResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        code:
+          type: string
+          title: Code
+        name:
+          type: string
+          title: Name
+        description:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Description
+        category:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Category
+        price:
+          type: number
+          title: Price
+        currency:
+          type: string
+          title: Currency
+        image_url:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Image Url
+        in_stock:
+          type: boolean
+          title: In Stock
+        custom_fields:
+          additionalProperties: true
+          type: object
+          title: Custom Fields
+          default: {}
+      type: object
+      required:
+        - id
+        - code
+        - name
+        - price
+        - currency
+        - in_stock
+      title: ProductResponse
+    ProductSearchResponse:
+      properties:
+        products:
+          items:
+            $ref: '#/components/schemas/ProductResponse'
+          type: array
+          title: Products
+        total:
+          type: integer
+          title: Total
+        query:
+          type: string
+          title: Query
+        filters:
+          additionalProperties: true
+          type: object
+          title: Filters
+      type: object
+      required:
+        - products
+        - total
+        - query
+        - filters
+      title: ProductSearchResponse
+    ProductViewOut:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        product_id:
+          type: string
+          format: uuid
+          title: Product Id
+        viewed_at:
+          type: string
+          format: date-time
+          title: Viewed At
+      type: object
+      required:
+        - id
+        - product_id
+        - viewed_at
+      title: ProductViewOut
+    QuickOrderRequest:
+      properties:
+        product_id:
+          type: string
+          format: uuid
+          title: Product Id
+        quantity:
+          type: integer
+          maximum: 100
+          minimum: 1
+          title: Quantity
+          default: 1
+        shipping_address:
+          anyOf:
+            - additionalProperties: true
+              type: object
+            - type: 'null'
+          title: Shipping Address
+        payment_method:
+          type: string
+          title: Payment Method
+          default: cash_on_delivery
+        order_notes:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Order Notes
+      type: object
+      required:
+        - product_id
+      title: QuickOrderRequest
+    RoleOut:
+      properties:
+        id:
+          type: integer
+          title: Id
+        name:
+          type: string
+          title: Name
+        description:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Description
+        permissions:
+          items:
+            $ref: '#/components/schemas/PermissionOut'
+          type: array
+          title: Permissions
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - permissions
+      title: RoleOut
+    SupportTicketResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        subject:
+          type: string
+          title: Subject
+        description:
+          type: string
+          title: Description
+        category:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Category
+        priority:
+          type: string
+          title: Priority
+        status:
+          type: string
+          title: Status
+        order_id:
+          anyOf:
+            - type: string
+              format: uuid
+            - type: 'null'
+          title: Order Id
+        conversation_id:
+          anyOf:
+            - type: string
+              format: uuid
+            - type: 'null'
+          title: Conversation Id
+        assigned_to:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Assigned To
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        updated_at:
+          type: string
+          format: date-time
+          title: Updated At
+        resolved_at:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+          title: Resolved At
+      type: object
+      required:
+        - id
+        - subject
+        - description
+        - category
+        - priority
+        - status
+        - order_id
+        - conversation_id
+        - assigned_to
+        - created_at
+        - updated_at
+        - resolved_at
+      title: SupportTicketResponse
+    SupportTicketStatsResponse:
+      properties:
+        total_tickets:
+          type: integer
+          title: Total Tickets
+        open_tickets:
+          type: integer
+          title: Open Tickets
+        closed_tickets:
+          type: integer
+          title: Closed Tickets
+        average_resolution_time:
+          anyOf:
+            - type: number
+            - type: 'null'
+          title: Average Resolution Time
+        tickets_by_category:
+          additionalProperties:
+            type: integer
+          type: object
+          title: Tickets By Category
+        tickets_by_priority:
+          additionalProperties:
+            type: integer
+          type: object
+          title: Tickets By Priority
+      type: object
+      required:
+        - total_tickets
+        - open_tickets
+        - closed_tickets
+        - average_resolution_time
+        - tickets_by_category
+        - tickets_by_priority
+      title: SupportTicketStatsResponse
+    Token:
+      properties:
+        access_token:
+          type: string
+          title: Access Token
+        token_type:
+          type: string
+          title: Token Type
+          default: bearer
+        expires_in:
+          type: integer
+          title: Expires In
+        user:
+          $ref: '#/components/schemas/UserFullResponse'
+      type: object
+      required:
+        - access_token
+        - expires_in
+        - user
+      title: Token
+    UpdateCartItemRequest:
+      properties:
+        quantity:
+          type: integer
+          maximum: 100
+          minimum: 1
+          title: Quantity
+      type: object
+      required:
+        - quantity
+      title: UpdateCartItemRequest
+    UpdateSupportTicketRequest:
+      properties:
+        description:
+          type: string
+          maxLength: 2000
+          minLength: 10
+          title: Description
+      type: object
+      required:
+        - description
+      title: UpdateSupportTicketRequest
+    UserCreate:
+      properties:
+        username:
+          type: string
+          title: Username
+        email:
+          type: string
+          format: email
+          title: Email
+        full_name:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Full Name
+        locale:
+          type: string
+          title: Locale
+          default: en
+        interests:
+          items:
+            type: string
+          type: array
+          title: Interests
+          default: []
+        preferences:
+          additionalProperties: true
+          type: object
+          title: Preferences
+          default: {}
+        password:
+          type: string
+          title: Password
+      type: object
+      required:
+        - username
+        - email
+        - password
+      title: UserCreate
+    UserFullResponse:
+      properties:
+        username:
+          type: string
+          title: Username
+        email:
+          type: string
+          format: email
+          title: Email
+        full_name:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Full Name
+        locale:
+          type: string
+          title: Locale
+          default: en
+        interests:
+          items:
+            type: string
+          type: array
+          title: Interests
+          default: []
+        preferences:
+          additionalProperties: true
+          type: object
+          title: Preferences
+          default: {}
+        id:
+          type: string
+          format: uuid
+          title: Id
+        is_active:
+          type: boolean
+          title: Is Active
+        is_superuser:
+          type: boolean
+          title: Is Superuser
+        avatar_url:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Avatar Url
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        last_active:
+          type: string
+          format: date-time
+          title: Last Active
+        roles:
+          anyOf:
+            - items:
+                $ref: '#/components/schemas/RoleOut'
+              type: array
+            - type: 'null'
+          title: Roles
+        conversations:
+          anyOf:
+            - items:
+                $ref: '#/components/schemas/ConversationOut'
+              type: array
+            - type: 'null'
+          title: Conversations
+        orders:
+          anyOf:
+            - items:
+                $ref: '#/components/schemas/OrderOut'
+              type: array
+            - type: 'null'
+          title: Orders
+        cart_items:
+          anyOf:
+            - items:
+                $ref: '#/components/schemas/CartItemOut'
+              type: array
+            - type: 'null'
+          title: Cart Items
+        viewed_products:
+          anyOf:
+            - items:
+                $ref: '#/components/schemas/ProductViewOut'
+              type: array
+            - type: 'null'
+          title: Viewed Products
+      type: object
+      required:
+        - username
+        - email
+        - id
+        - is_active
+        - is_superuser
+        - created_at
+        - last_active
+      title: UserFullResponse
+    UserLogin:
+      properties:
+        username:
+          type: string
+          title: Username
+        password:
+          type: string
+          title: Password
+      type: object
+      required:
+        - username
+        - password
+      title: UserLogin
+    UserResponse:
+      properties:
+        username:
+          type: string
+          title: Username
+        email:
+          type: string
+          format: email
+          title: Email
+        full_name:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Full Name
+        locale:
+          type: string
+          title: Locale
+          default: en
+        interests:
+          items:
+            type: string
+          type: array
+          title: Interests
+          default: []
+        preferences:
+          additionalProperties: true
+          type: object
+          title: Preferences
+          default: {}
+        id:
+          type: string
+          format: uuid
+          title: Id
+        is_active:
+          type: boolean
+          title: Is Active
+        is_superuser:
+          type: boolean
+          title: Is Superuser
+        avatar_url:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Avatar Url
+        created_at:
+          type: string
+          format: date-time
+          title: Created At
+        last_active:
+          type: string
+          format: date-time
+          title: Last Active
+      type: object
+      required:
+        - username
+        - email
+        - id
+        - is_active
+        - is_superuser
+        - created_at
+        - last_active
+      title: UserResponse
+    UserUpdate:
+      properties:
+        full_name:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Full Name
+        locale:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Locale
+        interests:
+          anyOf:
+            - items:
+                type: string
+              type: array
+            - type: 'null'
+          title: Interests
+        preferences:
+          anyOf:
+            - additionalProperties: true
+              type: object
+            - type: 'null'
+          title: Preferences
+        avatar_url:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Avatar Url
+      type: object
+      title: UserUpdate
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+              - type: string
+              - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+        - loc
+        - msg
+        - type
+      title: ValidationError
+    WishlistItemResponse:
+      properties:
+        id:
+          type: string
+          format: uuid
+          title: Id
+        product_id:
+          type: string
+          format: uuid
+          title: Product Id
+        product_name:
+          type: string
+          title: Product Name
+        product_code:
+          type: string
+          title: Product Code
+        product_image:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Product Image
+        product_price:
+          type: number
+          title: Product Price
+        notes:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Notes
+        added_at:
+          type: string
+          format: date-time
+          title: Added At
+      type: object
+      required:
+        - id
+        - product_id
+        - product_name
+        - product_code
+        - product_price
+        - added_at
+      title: WishlistItemResponse
+    WishlistResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/WishlistItemResponse'
+          type: array
+          title: Items
+        total_items:
+          type: integer
+          title: Total Items
+      type: object
+      required:
+        - items
+        - total_items
+      title: WishlistResponse
+  securitySchemes:
+    HTTPBearer:
+      type: http
+      scheme: bearer

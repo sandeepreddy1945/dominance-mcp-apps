@@ -1,0 +1,55 @@
+server:
+  port: 8005
+spring:
+  application:
+    name: dominance-mcp-apps
+  ai:
+    mcp:
+      server:
+        stdio: false
+        name: dominance-mcp-server
+        version: 1.0.0
+        type: SYNC
+        instructions: "MCP server for all dominance tools. Use streaming http protocol to connect to this server"
+        sse-message-endpoint: /mcp/messages
+        sse-endpoint: /mcp/sse
+#        protocol: STREAMABLE
+        capabilities:
+          tool: true
+          resource: true
+          prompt: true
+          completion: true
+        annotation-scanner:
+          enabled: true
+  datasource:
+    url: jdbc:h2:file:./data/dominance-mcp-app-server;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  # Disable the cloud config for now
+  cloud:
+    config:
+      enabled: false
+  # Disable docker compose for now
+  docker:
+    compose:
+      enabled: false
+app:
+  dominance:
+    clients:
+      cas-client:
+        base-url: http://localhost:8000
+        connect-timeout: 2
+        read-timeout: 20
+        token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NjQwODMxMTgsImlhdCI6MTc2MzM5MTkxOCwic3ViIjoiNzk1YWNmZWMtNGI0ZS00MzlmLWI3ZjEtYTExMzBjNTRkMTFhIiwiaXNfc3VwZXJ1c2VyIjp0cnVlLCJyb2xlcyI6WyJhZG1pbiJdfQ.pHa17r1oSevkbHoIErHi62Lh3R4WuKjfq2mDb4Mi3zI
