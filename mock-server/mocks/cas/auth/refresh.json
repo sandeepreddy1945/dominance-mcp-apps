@@ -2,7 +2,15 @@
   {
     "httpRequest": {
       "method": "POST",
-      "path": "/api/auth/refresh"
+      "path": "/api/auth/refresh",
+      "headers": {
+        "Content-Type": [
+          "application/json"
+        ],
+        "Accept": [
+          "application/json"
+        ]
+      }
     },
     "httpResponse": {
       "statusCode": 200,

@@ -3,6 +3,14 @@
     "httpRequest": {
       "method": "POST",
       "path": "/api/auth/login",
+      "headers": {
+        "Content-Type": [
+          "application/json"
+        ],
+        "Accept": [
+          "application/json"
+        ]
+      },
       "body": {
         "type": "JSON",
         "json": {

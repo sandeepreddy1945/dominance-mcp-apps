@@ -10,12 +10,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserToolServiceImpl implements UserToolService {
 
-    private final UsersApi usersApi;
+  private final UsersApi usersApi;
 
-    private final UserToolMapper userToolMapper;
+  private final UserToolMapper userToolMapper;
 
-    @Override
-    public UserResponseDTO getUserDetails() {
-        return this.userToolMapper.toUserResponseDTO(this.usersApi.getCurrentUserProfileApiUsersMeGet());
-    }
+  @Override
+  public UserResponseDTO getUserDetails() {
+    return this.userToolMapper.toUserResponseDTO(
+        this.usersApi.getCurrentUserProfileApiUsersMeGet());
+  }
 }

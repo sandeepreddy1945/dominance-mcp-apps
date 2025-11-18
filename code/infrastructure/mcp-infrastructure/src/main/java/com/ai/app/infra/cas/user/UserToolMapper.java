@@ -7,5 +7,5 @@ import org.mapstruct.MappingConstants;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UserToolMapper {
-    UserResponseDTO toUserResponseDTO(UserResponse currentUserProfileApiUsersMeGet);
+  UserResponseDTO toUserResponseDTO(UserResponse currentUserProfileApiUsersMeGet);
 }
