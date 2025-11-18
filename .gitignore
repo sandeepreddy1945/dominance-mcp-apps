@@ -1,33 +1,58 @@
-HELP.md
-target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+# Maven
+*target*
+log/
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
+# JS dependencies
+*node_modules*
+
+# Package Files 
+*.jar
+*.war
+*.ear
+*.class
+
+# eclipse specific git ignore
+*.pydevproject
 .project
-.settings
+.metadata
+bin/**
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+.factorypath
+
+# External tool builders
+.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+# STS (Spring Tool Suite)
 .springBeans
-.sts4-cache
 
-### IntelliJ IDEA ###
+#Clover
+.clover/
+
+# IntelliJ
 .idea
-*.iws
 *.iml
-*.ipr
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
+# yarn specific
+**/src/main/frontend/dist/**
+yarn.lock
 
-### VS Code ###
-.vscode/
+# Maven revision
+.flattened-pom.xml​
+
+# Mac
+.DS_Store
+
+.yo-rc.json
+/out/
