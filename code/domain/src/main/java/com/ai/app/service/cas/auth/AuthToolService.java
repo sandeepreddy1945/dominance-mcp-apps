@@ -4,9 +4,9 @@ import com.ai.app.model.cas.auth.TokenDTO;
 import com.ai.app.model.cas.auth.UserFullDetailsDTO;
 
 public interface AuthToolService {
-    TokenDTO authenticateUser(String username, String password);
+  TokenDTO authenticateUser(String username, String password);
 
-    UserFullDetailsDTO getCurrentUserInfo();
+  UserFullDetailsDTO getCurrentUserInfo();
 
-    TokenDTO refreshToken();
+  TokenDTO refreshToken();
 }

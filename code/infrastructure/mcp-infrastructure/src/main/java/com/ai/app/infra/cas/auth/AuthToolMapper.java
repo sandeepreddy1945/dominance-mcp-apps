@@ -10,7 +10,7 @@ import org.mapstruct.MappingConstants;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface AuthToolMapper {
 
-    TokenDTO fromToken(Token token);
+  TokenDTO fromToken(Token token);
 
-    UserFullDetailsDTO fromUserFullResponse(UserFullResponse userFullDetails);
+  UserFullDetailsDTO fromUserFullResponse(UserFullResponse userFullDetails);
 }

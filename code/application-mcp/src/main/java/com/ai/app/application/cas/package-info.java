@@ -1,4 +1,4 @@
-package com.ai.app.cas;
+package com.ai.app.application.cas;
 
 /**
  * CAS - Conversation Assistant Server
