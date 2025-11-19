@@ -1,9 +1,15 @@
 package com.ai.app.application.cas.auth;
 
+import com.ai.app.exception.UserAlreadyExists;
 import com.ai.app.model.cas.auth.TokenDTO;
+import com.ai.app.model.cas.auth.UserCreateDTO;
 import com.ai.app.model.cas.auth.UserFullDetailsDTO;
+import com.ai.app.model.cas.user.UserResponseDTO;
 import com.ai.app.service.cas.auth.AuthToolService;
 import com.ai.app.usecase.cas.auth.AuthToolUseCase;
+import io.modelcontextprotocol.spec.McpError;
+import io.modelcontextprotocol.spec.McpSchema.CallToolResult;
+import io.modelcontextprotocol.spec.McpSchema.TextContent;
 import lombok.RequiredArgsConstructor;
 import org.springaicommunity.mcp.annotation.McpTool;
 import org.springaicommunity.mcp.annotation.McpToolParam;
@@ -48,5 +54,24 @@ public class AuthToolUseCaseImpl implements AuthToolUseCase {
   @Override
   public TokenDTO refreshToken() {
     return this.authToolService.refreshToken();
+  }
+
+  @Override
+  @McpTool(name = "register_user", description = "Register a new user")
+  public CallToolResult registerUser(McpSyncRequestContext context, UserCreateDTO userCreateDTO) {
+    final UserResponseDTO userResponseDTO;
+    try {
+      userResponseDTO = this.authToolService.registerUser(userCreateDTO);
+    } catch (UserAlreadyExists ex) {
+      throw McpError.builder(400)
+          .message("The user or email provided is already registered with us!")
+          .build();
+    }
+    return CallToolResult.builder()
+        .addContent(
+            new TextContent(
+                "User with name: " + userResponseDTO.username() + " registered successfully."))
+        .isError(false)
+        .build();
   }
 }
