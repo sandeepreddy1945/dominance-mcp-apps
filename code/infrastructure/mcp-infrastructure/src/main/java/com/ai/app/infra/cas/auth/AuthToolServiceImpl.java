@@ -1,10 +1,14 @@
 package com.ai.app.infra.cas.auth;
 
+import static com.ai.app.common.util.ResponseUtils.extractResponse;
+
 import com.ai.app.cas.gen.api.AuthenticationApi;
+import com.ai.app.cas.gen.model.Token;
 import com.ai.app.cas.gen.model.UserCreate;
 import com.ai.app.cas.gen.model.UserLogin;
 import com.ai.app.cas.gen.model.UserResponse;
-import com.ai.app.exception.UserAlreadyExists;
+import com.ai.app.exception.auth.UnAuthorizedUserException;
+import com.ai.app.exception.auth.UserAlreadyExistsException;
 import com.ai.app.infra.cas.user.UserToolMapper;
 import com.ai.app.model.cas.auth.TokenDTO;
 import com.ai.app.model.cas.auth.UserCreateDTO;
@@ -28,9 +32,18 @@ public class AuthToolServiceImpl implements AuthToolService {
 
   @Override
   public TokenDTO authenticateUser(String username, String password) {
-    return this.authToolMapper.fromToken(
-        this.authenticationApi.loginApiAuthLoginPost(
-            new UserLogin().username(username).password(password)));
+    UserLogin userLoginDetails = new UserLogin().username(username).password(password);
+    ResponseSpec responseSpec =
+        this.authenticationApi.loginApiAuthLoginPostWithResponseSpec(userLoginDetails);
+    ParameterizedTypeReference<Token> parameterizedTypeReference =
+        new ParameterizedTypeReference<>() {};
+    Token token =
+        extractResponse(
+            responseSpec,
+            parameterizedTypeReference,
+            401,
+            new UnAuthorizedUserException("Incorrect username or password supplied"));
+    return this.authToolMapper.fromToken(token);
   }
 
   @Override
@@ -49,13 +62,15 @@ public class AuthToolServiceImpl implements AuthToolService {
     UserCreate createUserEntity = this.authToolMapper.toCreateUserEntity(userCreateDTO);
     ResponseSpec responseSpec =
         this.authenticationApi.registerApiAuthRegisterPostWithResponseSpec(createUserEntity);
-    responseSpec.onStatus(
-        status -> status.value() == 400,
-        (req, res) -> {
-          throw new UserAlreadyExists("The username or email specified already exists.");
-        });
-    ParameterizedTypeReference<UserResponse> localVarReturnType =
+    ParameterizedTypeReference<UserResponse> parameterizedTypeReference =
         new ParameterizedTypeReference<>() {};
-    return this.userToolMapper.toUserResponseDTO(responseSpec.body(localVarReturnType));
+    UserResponse userResponse =
+        extractResponse(
+            responseSpec,
+            parameterizedTypeReference,
+            400,
+            new UserAlreadyExistsException("The username or email specified already exists."));
+
+    return this.userToolMapper.toUserResponseDTO(userResponse);
   }
 }

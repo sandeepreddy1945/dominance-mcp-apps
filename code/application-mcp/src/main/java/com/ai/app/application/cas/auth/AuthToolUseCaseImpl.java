@@ -1,6 +1,6 @@
 package com.ai.app.application.cas.auth;
 
-import com.ai.app.exception.UserAlreadyExists;
+import com.ai.app.exception.auth.UserAlreadyExistsException;
 import com.ai.app.model.cas.auth.TokenDTO;
 import com.ai.app.model.cas.auth.UserCreateDTO;
 import com.ai.app.model.cas.auth.UserFullDetailsDTO;
@@ -62,7 +62,7 @@ public class AuthToolUseCaseImpl implements AuthToolUseCase {
     final UserResponseDTO userResponseDTO;
     try {
       userResponseDTO = this.authToolService.registerUser(userCreateDTO);
-    } catch (UserAlreadyExists ex) {
+    } catch (UserAlreadyExistsException ex) {
       throw McpError.builder(400)
           .message("The user or email provided is already registered with us!")
           .build();
