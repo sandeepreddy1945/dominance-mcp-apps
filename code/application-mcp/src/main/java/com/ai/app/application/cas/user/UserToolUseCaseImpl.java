@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class UserToolUseCaseImpl implements UserToolUseCase {
 
-    private final UserToolService userToolService;
+  private final UserToolService userToolService;
 
-    @Override
-    @McpTool(name = "who_am_i", description = "Get the current logged in user details")
-    public UserResponseDTO getUserDetails() {
-        return this.userToolService.getUserDetails();
-    }
+  @Override
+  @McpTool(name = "who_am_i", description = "Get the current logged in user details")
+  public UserResponseDTO getUserDetails() {
+    return this.userToolService.getUserDetails();
+  }
 }

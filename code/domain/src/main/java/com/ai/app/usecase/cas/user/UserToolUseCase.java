@@ -4,5 +4,5 @@ import com.ai.app.model.cas.user.UserResponseDTO;
 
 public interface UserToolUseCase {
 
-    UserResponseDTO getUserDetails();
+  UserResponseDTO getUserDetails();
 }

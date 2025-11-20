@@ -10,10 +10,13 @@ public record UserResponseDTO(
     @McpToolParam(description = "Username of the user") String username,
     @McpToolParam(description = "Email of the user") String email,
     @McpToolParam(description = "Full Name of the user", required = false) String fullName,
-    @McpToolParam(description = "Default Language setting for the user, Default is 'en'", required = false)
+    @McpToolParam(
+            description = "Default Language setting for the user, Default is 'en'",
+            required = false)
         String locale,
     @McpToolParam(description = "Interests of the user", required = false) List<String> interests,
-    @McpToolParam(description = "User Preferences", required = false) Map<String, Object> preferences,
+    @McpToolParam(description = "User Preferences", required = false)
+        Map<String, Object> preferences,
     @McpToolParam(description = "Unique id related to the user") UUID id,
     @McpToolParam(description = "Is the user active flag") Boolean isActive,
     @McpToolParam(description = "Is the user super / admin user flag") Boolean isSuperuser,

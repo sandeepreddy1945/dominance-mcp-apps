@@ -56,3 +56,6 @@ yarn.lock
 
 .yo-rc.json
 /out/
+#ignore local generated db data file
+*.db
+data/

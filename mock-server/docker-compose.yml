@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  mockserver:
+    image: mockserver/mockserver
+    ports:
+      - "1080:1080" # MockServer's default port
+      - "1090:1090" # MockServer's control port for managing expectations
+    environment:
+      MOCKSERVER_LOG_LEVEL: INFO # Optional: Set log level
+      MOCKSERVER_INITIALIZATION_JSON_PATH: /config/**/*.json
+      # Turn on file watching (hot-reload) so changes are picked up automatically
+      MOCKSERVER_WATCH_INITIALIZATION_JSON: "true"
+
+    volumes:
+      - type: bind
+        source: ./mocks
+        target: /config
