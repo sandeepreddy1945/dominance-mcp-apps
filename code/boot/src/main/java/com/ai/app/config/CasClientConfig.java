@@ -5,8 +5,10 @@ import com.ai.app.cas.gen.api.UsersApi;
 import com.ai.app.cas.gen.invoker.ApiClient;
 import com.ai.app.common.props.ClientProps;
 import com.ai.app.common.props.RestBuilderProps;
+import java.net.http.HttpClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.web.client.RestClient;
 
 @Configuration
@@ -16,12 +18,18 @@ public class CasClientConfig {
   public ApiClient apiClient(ClientProps clientProps) {
     RestBuilderProps restBuilderProps = clientProps.get("cas-client");
 
+    // use Http 1.1 in order to escape from the Uvicron issues on cas app
+    HttpClient httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_1_1).build();
+    JdkClientHttpRequestFactory jdkClientHttpRequestFactory =
+        new JdkClientHttpRequestFactory(httpClient);
+
     RestClient client =
         RestClient.builder()
             .baseUrl(restBuilderProps.getBaseUrl())
             .defaultHeader("Authorization", "Bearer " + restBuilderProps.getToken())
             .defaultHeader("Content-Type", "application/json")
             .defaultHeader("Accept", "application/json")
+            .requestFactory(jdkClientHttpRequestFactory)
             .build();
     return new ApiClient(client);
   }

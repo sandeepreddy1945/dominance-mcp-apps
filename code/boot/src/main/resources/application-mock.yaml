@@ -1,0 +1,8 @@
+app:
+  dominance:
+    clients:
+      cas-client:
+        base-url: http://localhost:1080
+        connect-timeout: 2
+        read-timeout: 20
+        token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NjQwODMxMTgsImlhdCI6MTc2MzM5MTkxOCwic3ViIjoiNzk1YWNmZWMtNGI0ZS00MzlmLWI3ZjEtYTExMzBjNTRkMTFhIiwiaXNfc3VwZXJ1c2VyIjp0cnVlLCJyb2xlcyI6WyJhZG1pbiJdfQ.pHa17r1oSevkbHoIErHi62Lh3R4WuKjfq2mDb4Mi3zI
