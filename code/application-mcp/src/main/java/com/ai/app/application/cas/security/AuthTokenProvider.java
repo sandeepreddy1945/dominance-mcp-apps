@@ -22,6 +22,8 @@ public class AuthTokenProvider {
     }
 
     private String fetchTokenFromSource() {
+        // TODO use the in memory apikey repo with id and fetch the security token
+        // authenticate with user and then cache the token on redis for further processing
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(principal instanceof ApiKeyEntity entity) {
             System.out.println(entity.getId());
