@@ -1,12 +1,11 @@
 package com.ai.app.config;
 
+import com.ai.app.application.cas.security.AuthHeaderInterceptor;
 import com.ai.app.cas.gen.api.AuthenticationApi;
 import com.ai.app.cas.gen.api.UsersApi;
 import com.ai.app.cas.gen.invoker.ApiClient;
 import com.ai.app.common.props.ClientProps;
 import com.ai.app.common.props.RestBuilderProps;
-import com.ai.app.application.cas.security.AuthHeaderInterceptor;
-
 import java.net.http.HttpClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

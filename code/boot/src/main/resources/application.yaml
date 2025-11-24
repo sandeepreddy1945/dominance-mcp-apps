@@ -51,6 +51,13 @@ spring:
   docker:
     compose:
       enabled: false
+  #Security
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:1999/realms/sandeep
+
 app:
   dominance:
     clients:
