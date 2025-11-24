@@ -1,5 +1,8 @@
 package com.ai.app.config;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 import org.springaicommunity.mcp.security.server.config.McpServerOAuth2Configurer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -7,7 +10,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -30,31 +37,20 @@ public class McpSecurityConfig {
         .with(
             McpServerOAuth2Configurer.mcpServerOAuth2(),
             auth -> auth.authorizationServer(issuerUri))
-        //        .with(
-        //            McpApiKeyConfigurer.mcpServerApiKey(),
-        //            apiKey -> apiKey.apiKeyRepository(apiKeyRepository()))
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        .csrf(AbstractHttpConfigurer::disable)
         .build();
   }
 
-  /** Provide a repository of {@link ApiKeyEntity}. */
-  //  private ApiKeyEntityRepository<ApiKeyEntity> apiKeyRepository() {
-  //    var apiKey =
-  //        ApiKeyEntityImpl.builder()
-  //            .name("sandeep test api key")
-  //            .id("sandeep01")
-  //            .secret("secret")
-  //            .build();
-  //    // use header X-API-key with value sandeep01.secret in order to authenticate
-  //    return new InMemoryApiKeyEntityRepository<>(List.of(apiKey));
-  //  }
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowedOrigins(Collections.singletonList("*")); // Allow all origins
+    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")); // Allow all common methods
+    configuration.setAllowedHeaders(Collections.singletonList("*")); // Allow all headers
 
-  //  @Bean
-  //  public JwtDecoder jwtDecoder() {
-  //    // HS256 secret key (same used in FastAPI)
-  //    SecretKey secretKey = new SecretKeySpec("abcdefghijklmnopqrstuvwxyz1234567890".getBytes(),
-  // "HmacSHA256");
-  //    return NimbusJwtDecoder.withSecretKey(secretKey)
-  //        .macAlgorithm(MacAlgorithm.HS256)
-  //        .build();
-  //  }
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration); // Apply this configuration to all paths
+    return source;
+  }
 }
