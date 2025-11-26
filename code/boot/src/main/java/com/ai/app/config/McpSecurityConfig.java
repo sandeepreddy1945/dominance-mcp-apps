@@ -2,7 +2,6 @@ package com.ai.app.config;
 
 import java.util.Arrays;
 import java.util.Collections;
-
 import org.springaicommunity.mcp.security.server.config.McpServerOAuth2Configurer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -46,7 +45,9 @@ public class McpSecurityConfig {
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
     configuration.setAllowedOrigins(Collections.singletonList("*")); // Allow all origins
-    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")); // Allow all common methods
+    configuration.setAllowedMethods(
+        Arrays.asList(
+            "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")); // Allow all common methods
     configuration.setAllowedHeaders(Collections.singletonList("*")); // Allow all headers
 
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
