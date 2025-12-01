@@ -1,25 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>com.ai.app</groupId>
-        <artifactId>dominance-mcp-apps</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-    </parent>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <artifactId>application-mcp</artifactId>
+  <dependencies>
+    <dependency>
+      <artifactId>common</artifactId>
+      <groupId>${project.groupId}</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>mcp-server-security</artifactId>
+      <groupId>org.springaicommunity</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>spring-boot-starter-security</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
+    <!-- OPTIONAL: For OAuth2 support -->
+    <dependency>
+      <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
 
-    <artifactId>application-mcp</artifactId>
-    <properties>
-        <java.version>21</java.version>
-    </properties>
+  </dependencies>
 
-   <dependencies>
-       <dependency>
-           <groupId>${project.groupId}</groupId>
-           <artifactId>common</artifactId>
-       </dependency>
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>dominance-mcp-apps</artifactId>
+    <groupId>com.ai.app</groupId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
 
-   </dependencies>
+  <properties>
+    <java.version>21</java.version>
+  </properties>
 
 </project>

@@ -1,6 +1,10 @@
 package com.ai.app.config;
 
+import com.ai.app.application.cas.security.AuthHeaderInterceptor;
 import com.ai.app.cas.gen.api.AuthenticationApi;
+import com.ai.app.cas.gen.api.CartApi;
+import com.ai.app.cas.gen.api.ProductsApi;
+import com.ai.app.cas.gen.api.UserJourneyApi;
 import com.ai.app.cas.gen.api.UsersApi;
 import com.ai.app.cas.gen.invoker.ApiClient;
 import com.ai.app.common.props.ClientProps;
@@ -15,7 +19,7 @@ import org.springframework.web.client.RestClient;
 public class CasClientConfig {
 
   @Bean
-  public ApiClient apiClient(ClientProps clientProps) {
+  public ApiClient apiClient(ClientProps clientProps, AuthHeaderInterceptor authHeaderInterceptor) {
     RestBuilderProps restBuilderProps = clientProps.get("cas-client");
 
     // use Http 1.1 in order to escape from the Uvicron issues on cas app
@@ -30,6 +34,7 @@ public class CasClientConfig {
             .defaultHeader("Content-Type", "application/json")
             .defaultHeader("Accept", "application/json")
             .requestFactory(jdkClientHttpRequestFactory)
+            .requestInterceptor(authHeaderInterceptor)
             .build();
     return new ApiClient(client);
   }
@@ -42,5 +47,20 @@ public class CasClientConfig {
   @Bean
   public UsersApi usersApi(ApiClient apiClient) {
     return new UsersApi(apiClient);
+  }
+
+  @Bean
+  public ProductsApi productsApi(ApiClient apiClient) {
+    return new ProductsApi(apiClient);
+  }
+
+  @Bean
+  public CartApi cartApi(ApiClient apiClient) {
+    return new CartApi(apiClient);
+  }
+
+  @Bean
+  public UserJourneyApi userJourneyApi(ApiClient apiClient) {
+    return new UserJourneyApi(apiClient);
   }
 }

@@ -14,8 +14,8 @@ services:
     environment:
       KC_DB: dev-file # Explicitly sets H2 file as the database
       KC_DB_URL_H2: jdbc:h2:./data/keycloakdb # Path to store the H2 database file
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
       KC_HTTP_PORT: 1999
     ports:
       - "1999:1999" # Maps host port 1999 to container port 1999

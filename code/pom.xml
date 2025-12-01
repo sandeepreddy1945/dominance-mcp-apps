@@ -54,8 +54,9 @@
         <google-java-format.version>1.27.0</google-java-format.version>
         <sortpom-maven-plugin.version>3.4.0</sortpom-maven-plugin.version>
         <openapi-generator-maven-plugin.version>7.17.0</openapi-generator-maven-plugin.version>
-        <spring-boot-dependencies.version>3.5.7</spring-boot-dependencies.version>
+        <spring-boot-dependencies.version>3.5.8</spring-boot-dependencies.version>
         <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
+      <mcp-server-security.version>0.0.4</mcp-server-security.version>
     </properties>
 
     <dependencyManagement>
@@ -89,8 +90,6 @@
             </dependency>
 
             <!-- End Internal Dependencies -->
-
-
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -98,6 +97,11 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+          <dependency>
+            <groupId>org.springaicommunity</groupId>
+            <artifactId>mcp-server-security</artifactId>
+            <version>${mcp-server-security.version}</version>
+          </dependency>
 
             <dependency>
                 <groupId>org.mapstruct</groupId>
