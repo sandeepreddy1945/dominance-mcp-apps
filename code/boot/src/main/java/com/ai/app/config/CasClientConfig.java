@@ -2,6 +2,9 @@ package com.ai.app.config;
 
 import com.ai.app.application.cas.security.AuthHeaderInterceptor;
 import com.ai.app.cas.gen.api.AuthenticationApi;
+import com.ai.app.cas.gen.api.CartApi;
+import com.ai.app.cas.gen.api.ProductsApi;
+import com.ai.app.cas.gen.api.UserJourneyApi;
 import com.ai.app.cas.gen.api.UsersApi;
 import com.ai.app.cas.gen.invoker.ApiClient;
 import com.ai.app.common.props.ClientProps;
@@ -44,5 +47,20 @@ public class CasClientConfig {
   @Bean
   public UsersApi usersApi(ApiClient apiClient) {
     return new UsersApi(apiClient);
+  }
+
+  @Bean
+  public ProductsApi productsApi(ApiClient apiClient) {
+    return new ProductsApi(apiClient);
+  }
+
+  @Bean
+  public CartApi cartApi(ApiClient apiClient) {
+    return new CartApi(apiClient);
+  }
+
+  @Bean
+  public UserJourneyApi userJourneyApi(ApiClient apiClient) {
+    return new UserJourneyApi(apiClient);
   }
 }
