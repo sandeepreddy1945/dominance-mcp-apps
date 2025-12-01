@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springaicommunity.mcp.annotation.McpTool;
 import org.springaicommunity.mcp.annotation.McpToolParam;
 import org.springaicommunity.mcp.context.McpSyncRequestContext;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.stringtemplate.v4.ST;
 
@@ -45,12 +46,14 @@ public class AuthToolUseCaseImpl implements AuthToolUseCase {
   @McpTool(
       name = "get_current_user_info",
       description = "Get the current logged in user details using the token")
+  @PreAuthorize("isAuthenticated()")
   @Override
   public UserFullDetailsDTO getCurrentUserInfo(McpSyncRequestContext context) {
     return this.authToolService.getCurrentUserInfo();
   }
 
   @McpTool(name = "refresh_token", description = "Refresh the token using the refresh token")
+  @PreAuthorize("isAuthenticated()")
   @Override
   public TokenDTO refreshToken() {
     return this.authToolService.refreshToken();
